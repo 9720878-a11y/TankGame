@@ -1,17 +1,22 @@
-// 1 April 2026 | TankGame by Peter Shumway
+// 1 April 2026 | TankGame by Ben Stalsberg
 Tank t1;
+Obstacle o1;
 PImage background;
+
 
 void setup () {
   size(500, 500);
   t1 = new Tank();
-  background = loadImage("background.png");
+  o1 = new Obstacle(400,100,100,50,1,100);
+  background = loadImage("background1.png");
   background.resize(width, height);
 }
 
 void draw () {
   background(background);
   t1.display();
+  o1.display();
+  o1.move();
 }
 
 void keyPressed() {

@@ -19,7 +19,7 @@ class Tank {
     idir = 'w';
   }
 
-  void display() {
+  void display() { 
     imageMode(CENTER);
     if (idir=='s') {
       image(tankS, x, y);
