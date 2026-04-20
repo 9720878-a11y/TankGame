@@ -1,50 +1,61 @@
 // 1 April 2026 | TankGame by Ben Stalsberg
 Tank t1;
 ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
-Obstacle o1, o2, o3;
+ArrayList<Obstacle> obstacles = new ArrayList<Obstacle>();
+//Obstacle o1, o2, o3;
 PImage background;
+int score;
+Timer objTimer;
 
-
-void setup () {
+void setup() {
   size(500, 500);
+  score = 0;
   t1 = new Tank();
-  o1 = new Obstacle(400, 50, 100, 50, 1, 100);
-  o2 = new Obstacle(400, 250, 100, 50, 1, 100);
-  o3 = new Obstacle(400, 450, 100, 50, 1, 100);
+ // o1 = new Obstacle(400, 250, 100, 50, 1, 100);
+ // o2 = new Obstacle(400, 250, 100, 50, 3, 100);
+ // o3 = new Obstacle(400, 250, 100, 50, 5, 100);
   background = loadImage("background1.png");
   background.resize(width, height);
+  objTimer = new Timer(1000);
+  objTimer.start();
 }
 
-void draw () {
+void draw() {
   background(background);
+  imageMode(CORNER);
+  image(background, 0, 0);
+
+  // Distribute object on timer
+  if (objTimer.isFinished()) {
+
+    // Add oblect
+  obstacles.add(new Obstacle(-100,200,100,100,int(random(1,10)),10));
+    // Restart Timer
+    objTimer.start();
+  }
+  //render and detect collision
   for (int i = 0; i < projectiles.size(); i++) {
-  Projectile part = projectiles.get(i);
-  part.display();
-  part.move();
+    Projectile p = projectiles.get(i);
+    for (int j = 0; j <obstacles.size(); j++) {
+      Obstacle o = obstacles.get(j);
+      if (p.intersect(o)) {
+        projectiles.remove(i);
+        obstacles.remove(j);
+        score = score += 100;
+      }
+    }
+    p.display();
+    p.move();
   }
   t1.display();
-  o1.display();
-  o1.move();
-  o2.display();
-  o2.move();
-  o3.display();
-  o3.move();
+//  o1.display();
+ // o1.move();
+ // o2.display();
+//  o2.move();
+ // o3.display();
+//  o3.move();
+  scorePanel();
 }
-
-void mousePressed() {
-  float dx = mouseX - t1.x;
-  float dy = mouseY - t1.y;
-  float mag = sqrt(dx*dx + dy*dy);
-
-  if (mag > 0) {
-    dx /=mag;
-    dy /=mag;
-  }
-
- float speed = 5;
-  projectiles.add(new Projectile(t1.x, t1.y, 4, 10));
-}
-
 
 void keyPressed() {
   if (key == 'w') {
@@ -56,4 +67,28 @@ void keyPressed() {
   } else if (key == 'd') {
     t1.move('d');
   }
+}
+
+void mousePressed() {
+  float dx = mouseX - t1.x;
+  float dy = mouseY - t1.x;
+  float mag = sqrt(dx*dx + dy*dy);
+
+  if (mag > 0) {
+    dx /= mag;
+    dy /=mag;
+    float speed = 5;
+    projectiles.add(new Projectile(t1.x, t1.y, dx * speed, dy * speed));
+  }
+}
+
+void scorePanel() {
+  fill(127, 200);
+  rectMode(CENTER);
+  noStroke();
+  rect(width/2, 15, width, 30);
+  fill(255);
+  textSize(30);
+  textAlign(CENTER);
+  text("Score:" + score, width/2, 25);
 }
