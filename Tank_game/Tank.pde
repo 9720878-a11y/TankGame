@@ -1,10 +1,8 @@
 class Tank {
-  // Member Variable
   float x, y, w, h, speed, health;
   PImage tankA, tankW, tankS, tankD;
   char idir;
 
-  // Constructor
   Tank() {
     x = 100.0;
     y = 100.0;
@@ -12,10 +10,12 @@ class Tank {
     h = 100.0;
     speed = 5.0;
     health = 75.0;
+
     tankS  = loadImage("tankS.png");
     tankD  = loadImage("tankD.png");
     tankA  = loadImage("tankA.png");
     tankW  = loadImage("tankW.png");
+
     idir = 'w';
   }
 
@@ -48,6 +48,10 @@ class Tank {
     }
   }
 
-  void fire() {
+  boolean intersect(Obstacle o) {
+    float distance = dist(x, y, o.x, o.y);
+    if (distance <100) {
+      return true;
+    } else return false;
   }
 }

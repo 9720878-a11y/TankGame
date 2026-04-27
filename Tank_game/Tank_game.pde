@@ -1,8 +1,7 @@
-// 1 April 2026 | TankGame by Ben Stalsberg
 Tank t1;
 ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
 ArrayList<Obstacle> obstacles = new ArrayList<Obstacle>();
-//Obstacle o1, o2, o3;
+
 PImage background;
 int score;
 Timer objTimer;
@@ -11,11 +10,10 @@ void setup() {
   size(500, 500);
   score = 0;
   t1 = new Tank();
- // o1 = new Obstacle(400, 250, 100, 50, 1, 100);
- // o2 = new Obstacle(400, 250, 100, 50, 3, 100);
- // o3 = new Obstacle(400, 250, 100, 50, 5, 100);
+
   background = loadImage("background1.png");
   background.resize(width, height);
+
   objTimer = new Timer(1000);
   objTimer.start();
 }
@@ -25,35 +23,46 @@ void draw() {
   imageMode(CORNER);
   image(background, 0, 0);
 
-  // Distribute object on timer
   if (objTimer.isFinished()) {
-
-    // Add oblect
-  obstacles.add(new Obstacle(-100,200,100,100,int(random(1,10)),10));
-    // Restart Timer
+    obstacles.add(new Obstacle(0, random(height), 100,100,random(2,5),10));
     objTimer.start();
   }
-  //render and detect collision
-  for (int i = 0; i < projectiles.size(); i++) {
+
+  for (int i = obstacles.size()-1; i >= 0; i--) {
+    Obstacle o = obstacles.get(i);
+    o.display();
+    o.move();
+
+    if (t1.intersect(o)) {
+      t1.health -= 10;
+      obstacles.remove(i);
+      continue;
+    }
+
+    if (o.offScreen()) {
+      obstacles.remove(i);
+    }
+  }
+
+  for (int i = projectiles.size()-1; i >= 0; i--) {
     Projectile p = projectiles.get(i);
-    for (int j = 0; j <obstacles.size(); j++) {
+
+    for (int j = obstacles.size()-1; j >= 0; j--) {
       Obstacle o = obstacles.get(j);
+
       if (p.intersect(o)) {
         projectiles.remove(i);
         obstacles.remove(j);
-        score = score += 100;
+        score += 100;
+        break;
       }
     }
+
     p.display();
     p.move();
   }
+
   t1.display();
-//  o1.display();
- // o1.move();
- // o2.display();
-//  o2.move();
- // o3.display();
-//  o3.move();
   scorePanel();
 }
 
@@ -71,7 +80,8 @@ void keyPressed() {
 
 void mousePressed() {
   float dx = mouseX - t1.x;
-  float dy = mouseY - t1.x;
+  float dy = mouseY - t1.y;
+
   float mag = sqrt(dx*dx + dy*dy);
 
   if (mag > 0) {
