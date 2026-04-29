@@ -4,54 +4,37 @@ class Tank {
   char idir;
 
   Tank() {
-    x = 100.0;
-    y = 100.0;
-    w = 100.0;
-    h = 100.0;
-    speed = 5.0;
-    health = 75.0;
+    x = 100;
+    y = 100;
+    w = 100;
+    h = 100;
+    speed = 30;
+    health = 75;
 
-    tankS  = loadImage("tankS.png");
-    tankD  = loadImage("tankD.png");
-    tankA  = loadImage("tankA.png");
-    tankW  = loadImage("tankW.png");
+    tankS = loadImage("tankS.png");
+    tankD = loadImage("tankD.png");
+    tankA = loadImage("tankA.png");
+    tankW = loadImage("tankW.png");
 
     idir = 'w';
   }
 
-  void display() { 
+  void display() {
     imageMode(CENTER);
-    if (idir=='s') {
-      image(tankS, x, y);
-    } else if (idir=='w') {
-      image(tankW, x, y);
-    } else if (idir=='d') {
-      image(tankD, x, y);
-    } else if (idir=='a') {
-      image(tankA, x, y);
-    }
+    if (idir=='s') image(tankS, x, y);
+    if (idir=='w') image(tankW, x, y);
+    if (idir=='d') image(tankD, x, y);
+    if (idir=='a') image(tankA, x, y);
   }
 
   void move(char dir) {
-    if (dir == 's') {
-      idir='s';
-      y = y + speed;
-    } else if (dir == 'w') {
-      idir = 'w';
-      y = y - speed;
-    } else if (dir == 'a') {
-      idir = 'a';
-      x = x - speed;
-    } else if (dir == 'd') {
-      idir = 'd';
-      x = x + speed;
-    }
+    if (dir == 's') { idir='s'; y += speed; }
+    if (dir == 'w') { idir='w'; y -= speed; }
+    if (dir == 'a') { idir='a'; x -= speed; }
+    if (dir == 'd') { idir='d'; x += speed; }
   }
 
   boolean intersect(Obstacle o) {
-    float distance = dist(x, y, o.x, o.y);
-    if (distance <100) {
-      return true;
-    } else return false;
+    return dist(x, y, o.x, o.y) < 100;
   }
 }

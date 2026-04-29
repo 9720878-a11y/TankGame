@@ -1,22 +1,16 @@
 class Timer {
-
   int savedTime;
   int totalTime;
 
-  Timer(int tempTotalTime) {
-    totalTime = tempTotalTime;
+  Timer(int totalTime) {
+    this.totalTime = totalTime;
   }
 
   void start() {
     savedTime = millis();
   }
 
-  boolean isFinished() { 
-    int passedTime = millis()- savedTime;
-    if (passedTime > totalTime) {
-      return true;
-    } else {
-      return false;
-    }
+  boolean isFinished() {
+    return millis() - savedTime > totalTime;
   }
 }
